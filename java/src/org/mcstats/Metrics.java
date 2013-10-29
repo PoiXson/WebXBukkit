@@ -27,13 +27,6 @@
  */
 package org.mcstats;
 
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.scheduler.BukkitTask;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -53,6 +46,13 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.zip.GZIPOutputStream;
+
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.scheduler.BukkitTask;
 
 public class Metrics {
 
@@ -127,10 +127,7 @@ public class Metrics {
 		configurationFile = getConfigFile();
 		configuration = YamlConfiguration.loadConfiguration(configurationFile);
 
-		// add some defaults
-		configuration.addDefault("opt-out", false);
-		configuration.addDefault("guid", UUID.randomUUID().toString());
-		configuration.addDefault("debug", false);
+		LoadConfigDefaults();
 
 		// Do we need to create the file?
 		if (configuration.get("guid", null) == null) {
@@ -141,6 +138,13 @@ public class Metrics {
 		// Load the guid then
 		guid = configuration.getString("guid");
 		debug = configuration.getBoolean("debug", false);
+	}
+
+	protected void LoadConfigDefaults() {
+		// add some defaults
+		configuration.addDefault("opt-out", false);
+		configuration.addDefault("guid", UUID.randomUUID().toString());
+		configuration.addDefault("debug", false);
 	}
 
 	/**
@@ -414,7 +418,7 @@ public class Metrics {
 		json.append('}');
 
 		// Create the url
-		URL url = new URL(BASE_URL + String.format(REPORT_URL, urlEncode(pluginName)));
+		URL url = new URL(getBaseUrl() + String.format(getReportUrl(), urlEncode(pluginName)));
 
 		// Connect to the website
 		URLConnection connection;
@@ -756,4 +760,15 @@ public class Metrics {
 			return plotter.name.equals(name) && plotter.getValue() == getValue();
 		}
 	}
+
+	// ====================
+
+	public String getBaseUrl() {
+		return DEFAULT_BASE_URL;
+	}
+	public String getReportUrl() {
+		return DEFAULT_REPORT_URL;
+	}
+
+
 }
