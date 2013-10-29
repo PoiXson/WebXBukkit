@@ -116,7 +116,7 @@ public class Metrics {
 	 */
 	private volatile BukkitTask task = null;
 
-	public Metrics(final Plugin plugin) throws IOException {
+	protected Metrics(final Plugin plugin) throws IOException {
 		if (plugin == null) {
 			throw new IllegalArgumentException("Plugin cannot be null");
 		}
