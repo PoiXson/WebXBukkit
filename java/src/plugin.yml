@@ -1,0 +1,7 @@
+name: WebXBukkit
+main: com.poixson.webxbukkit.WebAPI
+version: 1.0.0
+author: lorenzop
+description: Bukkit plugin to provide java and php api's to link websites to a bukkit server using a common mysql database
+website: http://poixson.com/
+softdepend: [vault]
