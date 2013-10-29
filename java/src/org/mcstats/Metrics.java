@@ -59,17 +59,17 @@ public class Metrics {
 	/**
 	 * The current revision number
 	 */
-	private final static int REVISION = 7;
+	private static final int REVISION = 7;
 
 	/**
 	 * The base url of the metrics domain
 	 */
-	private static final String BASE_URL = "http://report.mcstats.org";
+	protected static final String DEFAULT_BASE_URL = "http://report.mcstats.org";
 
 	/**
 	 * The url used to report a server's status
 	 */
-	private static final String REPORT_URL = "/plugin/%s";
+	protected static final String DEFAULT_REPORT_URL = "/plugin/%s";
 
 	/**
 	 * Interval of time to ping (in minutes)
@@ -84,12 +84,12 @@ public class Metrics {
 	/**
 	 * All of the custom graphs to submit to metrics
 	 */
-	private final Set<Graph> graphs = Collections.synchronizedSet(new HashSet<Graph>());
+	protected final Set<Graph> graphs = Collections.synchronizedSet(new HashSet<Graph>());
 
 	/**
 	 * The plugin configuration file
 	 */
-	private final YamlConfiguration configuration;
+	protected final YamlConfiguration configuration;
 
 	/**
 	 * The plugin configuration file
@@ -104,12 +104,12 @@ public class Metrics {
 	/**
 	 * Debug mode
 	 */
-	private final boolean debug;
+	protected final boolean debug;
 
 	/**
 	 * Lock for synchronization
 	 */
-	private final Object optOutLock = new Object();
+	protected final Object optOutLock = new Object();
 
 	/**
 	 * The scheduled task
@@ -325,7 +325,7 @@ public class Metrics {
 	/**
 	 * Generic method that posts a plugin to the metrics website
 	 */
-	private void postPlugin(final boolean isPing) throws IOException {
+	protected void postPlugin(final boolean isPing) throws IOException {
 		// Server software specific section
 		PluginDescriptionFile description = plugin.getDescription();
 		String pluginName = description.getName();
