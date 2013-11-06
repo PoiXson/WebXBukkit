@@ -90,4 +90,21 @@ public class xBukkitConfig {
 	}
 
 
+	public String getString(String path) {
+		return config.getString(path);
+	}
+	public int getInt(String path) {
+		return config.getInt(path);
+	}
+	public boolean getBool(String path) {
+		return config.getBoolean(path);
+	}
+	public double getDouble(String path) {
+		return config.getDouble(path);
+	}
+	public long getLong(String path) {
+		return config.getLong(path);
+	}
+
+
 }
