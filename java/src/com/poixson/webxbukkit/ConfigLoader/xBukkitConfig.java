@@ -17,12 +17,12 @@ public class xBukkitConfig {
 		throw new CloneNotSupportedException();
 	}
 
-	public static final String PATH_DATABASE_HOST   = "Database.Host";
-	public static final String PATH_DATABASE_PORT   = "Database.Port";
-	public static final String PATH_DATABASE_DBASE  = "Database.Database";
-	public static final String PATH_DATABASE_USER   = "Database.User";
-	public static final String PATH_DATABASE_PASS   = "Database.Pass";
-	public static final String PATH_DATABASE_PREFIX = "Database.Prefix";
+	public static final String PATH_Database_Host   = "Database.Host";
+	public static final String PATH_Database_Port   = "Database.Port";
+	public static final String PATH_Database_DBase  = "Database.Database";
+	public static final String PATH_Database_User   = "Database.User";
+	public static final String PATH_Database_Pass   = "Database.Pass";
+	public static final String PATH_Database_Prefix = "Database.Prefix";
 
 	protected final YamlConfiguration config;
 	protected volatile String dbKey = null;
@@ -61,12 +61,12 @@ public class xBukkitConfig {
 	protected void defaults() {}
 	// example database config
 	protected void defaultDatabase() {
-		config.addDefault(PATH_DATABASE_HOST,   "localhost");
-		config.addDefault(PATH_DATABASE_PORT,   3306);
-		config.addDefault(PATH_DATABASE_DBASE,  "bukkit");
-		config.addDefault(PATH_DATABASE_USER,   "minecraft");
-		config.addDefault(PATH_DATABASE_PASS,   "password123");
-		config.addDefault(PATH_DATABASE_PREFIX, "pxn_");
+		config.addDefault(PATH_Database_Host,   "localhost");
+		config.addDefault(PATH_Database_Port,   3306);
+		config.addDefault(PATH_Database_DBase,  "bukkit");
+		config.addDefault(PATH_Database_User,   "minecraft");
+		config.addDefault(PATH_Database_Pass,   "password123");
+		config.addDefault(PATH_Database_Prefix, "pxn_");
 	}
 
 
@@ -74,13 +74,13 @@ public class xBukkitConfig {
 	public String dbKey() {
 		if(this.dbKey == null || this.dbKey.isEmpty()) {
 			this.dbKey = dbConfig.get(
-				config.getString(PATH_DATABASE_HOST),
-				config.getInt   (PATH_DATABASE_PORT),
-				config.getString(PATH_DATABASE_DBASE),
-				config.getString(PATH_DATABASE_USER),
-				config.getString(PATH_DATABASE_PASS)
+				config.getString(PATH_Database_Host),
+				config.getInt   (PATH_Database_Port),
+				config.getString(PATH_Database_DBase),
+				config.getString(PATH_Database_User),
+				config.getString(PATH_Database_Pass)
 			).getKey();
-			this.dbPrefix = config.getString(PATH_DATABASE_PREFIX);
+			this.dbPrefix = config.getString(PATH_Database_Prefix);
 		}
 		return this.dbKey;
 	}
