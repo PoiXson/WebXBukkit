@@ -17,6 +17,13 @@ public class xBukkitConfig {
 		throw new CloneNotSupportedException();
 	}
 
+	public static final String PATH_DATABASE_HOST   = "Database.Host";
+	public static final String PATH_DATABASE_PORT   = "Database.Port";
+	public static final String PATH_DATABASE_DBASE  = "Database.Database";
+	public static final String PATH_DATABASE_USER   = "Database.User";
+	public static final String PATH_DATABASE_PASS   = "Database.Pass";
+	public static final String PATH_DATABASE_PREFIX = "Database.Prefix";
+
 	protected final YamlConfiguration config;
 	protected volatile String dbKey = null;
 	protected volatile String dbPrefix = null;
@@ -54,12 +61,12 @@ public class xBukkitConfig {
 	protected void defaults() {}
 	// example database config
 	protected void defaultDatabase() {
-		config.addDefault("Database.Host",     "localhost");
-		config.addDefault("Database.Port",     3306);
-		config.addDefault("Database.Database", "bukkit");
-		config.addDefault("Database.User",     "minecraft");
-		config.addDefault("Database.Pass",     "password123");
-		config.addDefault("Database.Prefix",   "pxn_");
+		config.addDefault(PATH_DATABASE_HOST,   "localhost");
+		config.addDefault(PATH_DATABASE_PORT,   3306);
+		config.addDefault(PATH_DATABASE_DBASE,  "bukkit");
+		config.addDefault(PATH_DATABASE_USER,   "minecraft");
+		config.addDefault(PATH_DATABASE_PASS,   "password123");
+		config.addDefault(PATH_DATABASE_PREFIX, "pxn_");
 	}
 
 
@@ -67,13 +74,13 @@ public class xBukkitConfig {
 	public String dbKey() {
 		if(this.dbKey == null || this.dbKey.isEmpty()) {
 			this.dbKey = dbConfig.get(
-				config.getString("Database.Host"),
-				config.getInt   ("Database.Port"),
-				config.getString("Database.Database"),
-				config.getString("Database.User"),
-				config.getString("Database.Pass")
+				config.getString(PATH_DATABASE_HOST),
+				config.getInt   (PATH_DATABASE_PORT),
+				config.getString(PATH_DATABASE_DBASE),
+				config.getString(PATH_DATABASE_USER),
+				config.getString(PATH_DATABASE_PASS)
 			).getKey();
-			this.dbPrefix = config.getString("Database.Prefix");
+			this.dbPrefix = config.getString(PATH_DATABASE_PREFIX);
 		}
 		return this.dbKey;
 	}
