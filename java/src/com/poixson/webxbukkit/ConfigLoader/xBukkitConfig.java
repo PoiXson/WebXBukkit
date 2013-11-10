@@ -73,7 +73,7 @@ public class xBukkitConfig {
 	// get dbConfig
 	public String dbKey() {
 		if(this.dbKey == null || this.dbKey.isEmpty()) {
-			this.dbKey = dbConfig.get(
+			this.dbKey = dbConfig.load(
 				config.getString(PATH_Database_Host),
 				config.getInt   (PATH_Database_Port),
 				config.getString(PATH_Database_DBase),

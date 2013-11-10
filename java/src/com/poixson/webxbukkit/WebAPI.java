@@ -6,8 +6,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.MetricsManager;
 
-import com.poixson.commonjava.Utils.utilsThread;
-import com.poixson.commonjava.Utils.xTime;
 import com.poixson.commonjava.pxdb.dbConfig;
 import com.poixson.commonjava.pxdb.dbManager;
 import com.poixson.commonjava.pxdb.dbQuery;
@@ -26,6 +24,7 @@ public class WebAPI extends JavaPlugin {
 @SuppressWarnings("unused")
 	private volatile SettingsManager settings = null;
 	private volatile PluginVersion version = null;
+@SuppressWarnings("unused")
 	private final webLanguage lang = new webLanguage();
 
 	// database key
@@ -87,12 +86,31 @@ public class WebAPI extends JavaPlugin {
 	}
 
 
+	public boolean isDebug() {
+		return true;
+	}
+
+
+	// get plugins/name/ dir
+	public static String getPluginDir() {
+		return getPluginDir(get());
+	}
+	public static String getPluginDir(Plugin plugin) {
+		if(plugin == null) return null;
+		return plugin.getDataFolder().toString();
+	}
 	// get plugins/ dir
 	public static String getPluginsDir() {
 		return getPluginsDir(get());
 	}
 	public static String getPluginsDir(Plugin plugin) {
+		if(plugin == null) return null;
 		return plugin.getDataFolder().getParentFile().toString();
+	}
+
+
+	public dbQuery getDB() {
+		return dbQuery.get(dbKey);
 	}
 
 
