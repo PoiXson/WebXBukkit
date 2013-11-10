@@ -10,6 +10,9 @@ import com.poixson.commonjava.pxdb.dbConfig;
 import com.poixson.commonjava.pxdb.dbManager;
 import com.poixson.commonjava.pxdb.dbQuery;
 import com.poixson.webxbukkit.webLink.LinkManager;
+import com.poixson.webxbukkit.webLink.handlers.economyHandler;
+import com.poixson.webxbukkit.webLink.handlers.inventoryHandler;
+import com.poixson.webxbukkit.webLink.handlers.permissionsHandler;
 import com.poixson.webxbukkit.webSettings.SettingsManager;
 
 
@@ -26,6 +29,8 @@ public class WebAPI extends JavaPlugin {
 	private volatile PluginVersion version = null;
 @SuppressWarnings("unused")
 	private final webLanguage lang = new webLanguage();
+	// web link
+	private volatile LinkManager link = null;
 
 	// database key
 	private volatile String dbKey = null;
@@ -65,10 +70,28 @@ public class WebAPI extends JavaPlugin {
 		// language
 		lang.load(this, "en");
 
-		// standalone web economy
+		// web link
+		link = LinkManager.get(dbKey);
+		LinkManager.start();
+		// stand-alone web economy
 		if(config.getBool(webConfig.PATH_Standalone_WebEconomy_Enabled)) {
-			LinkManager.get(dbKey);
+			@SuppressWarnings("unused")
+			economyHandler economy = (economyHandler) link.getHandler("economy");
+			System.out.println("Enabled web link: economy");
 		}
+		// stand-alone web inventory
+		if(config.getBool(webConfig.PATH_Standalone_WebInventory_Enabled)) {
+			@SuppressWarnings("unused")
+			inventoryHandler inventory = (inventoryHandler) link.getHandler("inventory");
+			System.out.println("Enabled web link: inventory");
+		}
+		// stand-alone web permissions
+		if(config.getBool(webConfig.PATH_Standalone_WebPermissions_Enabled)) {
+			@SuppressWarnings("unused")
+			permissionsHandler permissions = (permissionsHandler) link.getHandler("permissions");
+			System.out.println("Enabled web link: permissions");
+		}
+
 
 
 
