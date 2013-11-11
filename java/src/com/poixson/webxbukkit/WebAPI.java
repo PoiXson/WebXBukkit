@@ -5,12 +5,11 @@ import java.io.IOException;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.MetricsManager;
 
-import com.poixson.commonjava.pxdb.dbConfig;
-import com.poixson.commonjava.pxdb.dbManager;
 import com.poixson.commonjava.pxdb.dbQuery;
 import com.poixson.webxbukkit.webLink.LinkManager;
 import com.poixson.webxbukkit.webLink.handlers.economyHandler;
@@ -30,7 +29,6 @@ public class WebAPI extends JavaPlugin {
 @SuppressWarnings("unused")
 	private volatile SettingsManager settings = null;
 	private volatile PluginVersion version = null;
-@SuppressWarnings("unused")
 	private final webLanguage lang = new webLanguage();
 	// web link
 	private volatile LinkManager link = null;
@@ -38,17 +36,30 @@ public class WebAPI extends JavaPlugin {
 	// database key
 	private volatile String dbKey = null;
 
-	// run state
-@SuppressWarnings("unused")
+	// null=unloaded false=failed true=loaded
+	private static volatile Boolean isOk = null;
 	private static volatile boolean debug = false;
 
 
-	// get api instance
+	// get instance
 	public static WebAPI get() {
 		synchronized(lock) {
 			if(instance == null) throw new RuntimeException("WebAPI is not enabled! Plugin instance cannot be obtained!");
 			return instance;
 		}
+	}
+	public WebAPI() {
+		super();
+		synchronized(lock) {
+			if(instance != null) throw new RuntimeException("API already loaded?!");
+			instance = this;
+		}
+	}
+	public static boolean isOk() {
+		return isOk;
+	}
+	public boolean isDebug() {
+		return debug;
 	}
 
 
@@ -56,8 +67,15 @@ public class WebAPI extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		synchronized(lock) {
-			if(instance != null) throw new RuntimeException("WebAPI plugin already enabled?!");
-			instance = this;
+			if(isOk != null) {
+				getServer().getConsoleSender().sendMessage(ChatColor.RED+"************************************");
+				getServer().getConsoleSender().sendMessage(ChatColor.RED+"*** WebAPI is already running!!! ***");
+				getServer().getConsoleSender().sendMessage(ChatColor.RED+"************************************");
+				return;
+			}
+			isOk = false;
+			if(instance == null)
+				instance = this;
 		}
 		// load vault (required)
 		Vault.Init();
@@ -70,7 +88,6 @@ public class WebAPI extends JavaPlugin {
 		// plugin version
 		version = PluginVersion.get(this);
 		version.update();
-
 		// config.yml
 		config = new webConfig(this);
 		// connect to db
@@ -79,10 +96,13 @@ public class WebAPI extends JavaPlugin {
 		settings = SettingsManager.get(dbKey);
 		// language
 		lang.load(this, "en");
-
 		// web link
 		link = LinkManager.get(dbKey);
 		LinkManager.start();
+
+
+
+
 		// stand-alone web economy
 		if(config.getBool(webConfig.PATH_Standalone_WebEconomy_Enabled)) {
 			@SuppressWarnings("unused")
@@ -102,6 +122,12 @@ public class WebAPI extends JavaPlugin {
 			System.out.println("Enabled web link: permissions");
 		}
 
+		isOk = true;
+
+
+
+
+
 
 
 
@@ -116,11 +142,15 @@ public class WebAPI extends JavaPlugin {
 	// prepare to end
 	@Override
 	public void onDisable() {
-	}
+		isOk = false;
+		// stop schedulers
+		try {
+			Bukkit.getScheduler().cancelTasks(this);
+		} catch (Exception ignore) {}
 
 
-	public boolean isDebug() {
-		return true;
+
+		isOk = null;
 	}
 
 
@@ -142,11 +172,10 @@ public class WebAPI extends JavaPlugin {
 	}
 
 
+	// get objects
 	public dbQuery getDB() {
 		return dbQuery.get(dbKey);
 	}
-
-
 	public Economy getEconomy() {
 		return Vault.getEconomy();
 	}
