@@ -2,6 +2,9 @@ package com.poixson.webxbukkit;
 
 import java.io.IOException;
 
+import net.milkbowl.vault.economy.Economy;
+
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.MetricsManager;
@@ -55,6 +58,13 @@ public class WebAPI extends JavaPlugin {
 		synchronized(lock) {
 			if(instance != null) throw new RuntimeException("WebAPI plugin already enabled?!");
 			instance = this;
+		}
+		// load vault (required)
+		Vault.Init();
+		if(Vault.getEconomy() == null) {
+			System.out.println("Economy plugin not found!");
+			Bukkit.getPluginManager().disablePlugin(this);
+			return;
 		}
 
 		// plugin version
@@ -134,6 +144,11 @@ public class WebAPI extends JavaPlugin {
 
 	public dbQuery getDB() {
 		return dbQuery.get(dbKey);
+	}
+
+
+	public Economy getEconomy() {
+		return Vault.getEconomy();
 	}
 
 
