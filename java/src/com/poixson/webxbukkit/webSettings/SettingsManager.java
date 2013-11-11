@@ -51,15 +51,17 @@ public final class SettingsManager {
 			db.exec();
 			settings.clear();
 			while(db.hasNext()) {
+				String name = db.getString("name");
+				String value = db.getString("value");
+				if(name == null || name.isEmpty() || value == null || value.isEmpty()) continue;
 				settings.put(
-					db.getString("name"),
-					db.getString("value")
+					name,
+					value
 				);
 			}
 			db.release();
 		}
 	}
-
 
 
 	public String getTableName() {
