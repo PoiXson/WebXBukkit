@@ -6,9 +6,9 @@ import com.poixson.webxbukkit.webLink.ActionEvent;
 import com.poixson.webxbukkit.webLink.ActionHandler;
 
 
-public class economyHandler implements ActionHandler {
+public class worldguardHandler implements ActionHandler {
 
-	public static final String HANDLER_NAME = "economy";
+	public static final String HANDLER_NAME = "worldguard";
 
 
 	@Override
@@ -27,9 +27,7 @@ public class economyHandler implements ActionHandler {
 	public void onAction(ActionEvent event) {
 		if(event.isCancelled()) return;
 		if(!event.equalsHandler(HANDLER_NAME)) return;
-
-System.out.println("HANDLER: "+event.getHandlerName());
-System.out.println("ACTION: "+event.getActionName());
+		System.out.println("ACTION EVENT: "+event.getActionName());
 	}
 
 

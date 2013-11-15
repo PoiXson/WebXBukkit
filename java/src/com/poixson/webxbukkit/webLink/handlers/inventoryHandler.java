@@ -1,14 +1,19 @@
 package com.poixson.webxbukkit.webLink.handlers;
 
-import com.poixson.webxbukkit.webLink.linkHandler;
+import org.bukkit.event.EventHandler;
+
+import com.poixson.webxbukkit.webLink.ActionEvent;
+import com.poixson.webxbukkit.webLink.ActionHandler;
 
 
-public class inventoryHandler extends linkHandler {
+public class inventoryHandler implements ActionHandler {
+
+	public static final String HANDLER_NAME = "inventory";
 
 
-	public inventoryHandler(String handlerName, String dbKey) {
-		super(handlerName, dbKey);
-//		System.out.println(dbKey+" New inventory web link!");
+	@Override
+	public String getHandlerName() {
+		return HANDLER_NAME;
 	}
 
 
@@ -18,7 +23,11 @@ public class inventoryHandler extends linkHandler {
 
 
 	@Override
-	public void doAction(String player, String action) {
+	@EventHandler
+	public void onAction(ActionEvent event) {
+		if(event.isCancelled()) return;
+		if(!event.equalsHandler(HANDLER_NAME)) return;
+System.out.println("ACTION EVENT: "+event.getActionName());
 	}
 
 
