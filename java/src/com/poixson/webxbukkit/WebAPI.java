@@ -16,6 +16,7 @@ import com.poixson.webxbukkit.webLink.handlers.economyHandler;
 import com.poixson.webxbukkit.webLink.handlers.inventoryHandler;
 import com.poixson.webxbukkit.webLink.handlers.permissionsHandler;
 import com.poixson.webxbukkit.webSettings.SettingsManager;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 
 public class WebAPI extends JavaPlugin {
@@ -77,12 +78,17 @@ public class WebAPI extends JavaPlugin {
 			if(instance == null)
 				instance = this;
 		}
-		// load vault (required)
-		Vault.Init();
-		if(Vault.getEconomy() == null) {
-			System.out.println("Economy plugin not found!");
-			Bukkit.getPluginManager().disablePlugin(this);
-			return;
+		// load vault economy
+		if(Plugins3rdParty.get().getEconomy() == null)
+			System.out.println("Economy plugin not found");
+		else
+			System.out.println("Economy plugin found");
+		// load world guard
+		if(Plugins3rdParty.get().getWorldGuard() == null)
+			System.out.println("WorldGuard plugin not found");
+		else
+			System.out.println("WorldGuard plugin found");
+
 		}
 
 		// plugin version
@@ -177,7 +183,10 @@ public class WebAPI extends JavaPlugin {
 		return dbQuery.get(dbKey);
 	}
 	public Economy getEconomy() {
-		return Vault.getEconomy();
+		return Plugins3rdParty.get().getEconomy();
+	}
+	public WorldGuardPlugin getWorldGuard() {
+		return Plugins3rdParty.get().getWorldGuard();
 	}
 
 
