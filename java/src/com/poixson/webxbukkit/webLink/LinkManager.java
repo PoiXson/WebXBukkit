@@ -127,6 +127,10 @@ public class LinkManager {
 		@Override
 		public void run() {
 			Bukkit.getPluginManager().callEvent(event);
+			if(event.isCancelled())
+				System.out.println("Event "+Integer.toString(event.getId())+" was cancelled.");
+			else
+				System.out.println("Event "+Integer.toString(event.getId())+" was called.");
 		}
 
 	}
@@ -168,6 +172,7 @@ public class LinkManager {
 				// trigger event
 				ActionEvent event = new ActionEvent(
 					dbKey,
+					db.getInt("action_id"),
 					db.getString("player"),
 					db.getString("handler"),
 					db.getString("action")

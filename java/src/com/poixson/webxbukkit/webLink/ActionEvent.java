@@ -16,14 +16,16 @@ public class ActionEvent extends Event implements Cancellable {
 	private volatile boolean cancelled = false;
 
 	private final String dbKey;
+	private final int    id;
 	private final String player;
 	private final String handlerName;
 	private final String actionName;
 
 
-	public ActionEvent(String dbKey, String player, String handlerName, String actionName) {
-		this.dbKey  = dbKey;
-		this.player = player;
+	public ActionEvent(String dbKey, int id, String player, String handlerName, String actionName) {
+		this.dbKey       = dbKey;
+		this.id          = id;
+		this.player      = player;
 		this.handlerName = handlerName;
 		this.actionName  = actionName;
 	}
@@ -44,6 +46,9 @@ public class ActionEvent extends Event implements Cancellable {
 	}
 	public dbQuery getDB() {
 		return dbQuery.get(dbKey());
+	}
+	public int getId() {
+		return this.id;
 	}
 	public String getPlayerName() {
 		return player;
