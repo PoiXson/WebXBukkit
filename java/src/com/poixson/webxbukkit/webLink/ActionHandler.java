@@ -9,7 +9,7 @@ public interface ActionHandler extends Listener {
 	public String getHandlerName();
 
 	// outbound updates
-	public void doUpdate();
+	public void doUpdate(String dbKey);
 	// inbound updates
 	public void onAction(ActionEvent event);
 

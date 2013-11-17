@@ -18,7 +18,7 @@ public class permsHandler implements ActionHandler {
 
 
 	@Override
-	public void doUpdate() {
+	public void doUpdate(String dbKey) {
 	}
 
 

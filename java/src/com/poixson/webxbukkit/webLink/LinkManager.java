@@ -133,7 +133,7 @@ public class LinkManager {
 	private void triggerUpdates() {
 		synchronized(handlers) {
 			for(ActionHandler handler : handlers.values())
-				handler.doUpdate();
+				handler.doUpdate(dbKey);
 		}
 	}
 
