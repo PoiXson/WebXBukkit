@@ -26,8 +26,9 @@ public class worldguardHandler extends ActionHandler {
 	@EventHandler
 	public void onAction(ActionEvent event) {
 		if(event.isCancelled()) return;
-		if(!event.equalsHandler(HANDLER_NAME)) return;
-		System.out.println("ACTION EVENT: "+event.getActionName());
+		if(!event.isHandler(HANDLER_NAME)) return;
+		// process worldguard action
+//System.out.println("ACTION EVENT: "+event.getActionName());
 	}
 
 

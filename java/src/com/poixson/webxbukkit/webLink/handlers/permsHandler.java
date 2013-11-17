@@ -26,8 +26,9 @@ public class permsHandler extends ActionHandler {
 	@EventHandler
 	public void onAction(ActionEvent event) {
 		if(event.isCancelled()) return;
-		if(!event.equalsHandler(HANDLER_NAME)) return;
-System.out.println("ACTION EVENT: "+event.getActionName());
+		if(!event.isHandler(HANDLER_NAME)) return;
+		// process permissions action
+//System.out.println("ACTION EVENT: "+event.getActionName());
 	}
 
 
