@@ -11,10 +11,12 @@ public class webConfig extends xBukkitConfig {
 	public static final String PATH_Standalone_WebEconomy_Enabled        = "Standalone.WebEconomy.Enabled";
 	// web inventory
 	public static final String PATH_Standalone_WebInventory_Enabled      = "Standalone.WebInventory.Enabled";
-	public static final String PATH_Standalone_WebInventory_AllowCommand = "Standalone.WebInventory.AllowCommand";
-	public static final String PATH_Standalone_WebInventory_AllowSign    = "Standalone.WebInventory.AllowSign";
+		public static final String PATH_Standalone_WebInventory_AllowCommand = "Standalone.WebInventory.AllowCommand";
+		public static final String PATH_Standalone_WebInventory_AllowSign    = "Standalone.WebInventory.AllowSign";
 	// web permissions
 	public static final String PATH_Standalone_WebPermissions_Enabled    = "Standalone.WebPermissions.Enabled";
+	// web worldguard
+	public static final String PATH_Standalone_WebWorldGuard_Enabled     = "Standalone.WebWorldGuard.Enabled";
 
 
 	public webConfig(Plugin plugin) {
@@ -31,10 +33,12 @@ public class webConfig extends xBukkitConfig {
 		config.addDefault(PATH_Standalone_WebEconomy_Enabled,        false);
 		// web inventory
 		config.addDefault(PATH_Standalone_WebInventory_Enabled,      false);
-		config.addDefault(PATH_Standalone_WebInventory_AllowCommand, true);
-		config.addDefault(PATH_Standalone_WebInventory_AllowSign,    true);
+			config.addDefault(PATH_Standalone_WebInventory_AllowCommand, true);
+			config.addDefault(PATH_Standalone_WebInventory_AllowSign,    true);
 		// web permissions
 		config.addDefault(PATH_Standalone_WebPermissions_Enabled,    false);
+		// web worldguard
+		config.addDefault(PATH_Standalone_WebWorldGuard_Enabled,     false);
 	}
 
 

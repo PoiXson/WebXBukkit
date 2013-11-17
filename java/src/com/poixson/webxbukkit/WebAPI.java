@@ -12,9 +12,6 @@ import org.mcstats.MetricsManager;
 
 import com.poixson.commonjava.pxdb.dbQuery;
 import com.poixson.webxbukkit.webLink.LinkManager;
-import com.poixson.webxbukkit.webLink.handlers.economyHandler;
-import com.poixson.webxbukkit.webLink.handlers.inventoryHandler;
-import com.poixson.webxbukkit.webLink.handlers.permissionsHandler;
 import com.poixson.webxbukkit.webSettings.SettingsManager;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
@@ -102,31 +99,31 @@ public class WebAPI extends JavaPlugin {
 		settings = SettingsManager.get(dbKey);
 		// language
 		lang.load(this, "en");
+
 		// web link
 		link = LinkManager.get(dbKey);
-		LinkManager.start();
-
-
-
-
 		// stand-alone web economy
-		if(config.getBool(webConfig.PATH_Standalone_WebEconomy_Enabled)) {
-			@SuppressWarnings("unused")
-			economyHandler economy = (economyHandler) link.getHandler("economy");
-			System.out.println("Enabled web link: economy");
-		}
+		link.setEnabled(
+			"economy",
+			config.getBool(webConfig.PATH_Standalone_WebEconomy_Enabled)
+		);
 		// stand-alone web inventory
-		if(config.getBool(webConfig.PATH_Standalone_WebInventory_Enabled)) {
-			@SuppressWarnings("unused")
-			inventoryHandler inventory = (inventoryHandler) link.getHandler("inventory");
-			System.out.println("Enabled web link: inventory");
-		}
+		link.setEnabled(
+			"inventory",
+			config.getBool(webConfig.PATH_Standalone_WebInventory_Enabled)
+		);
 		// stand-alone web permissions
-		if(config.getBool(webConfig.PATH_Standalone_WebPermissions_Enabled)) {
-			@SuppressWarnings("unused")
-			permissionsHandler permissions = (permissionsHandler) link.getHandler("permissions");
-			System.out.println("Enabled web link: permissions");
-		}
+		link.setEnabled(
+			"perms",
+			config.getBool(webConfig.PATH_Standalone_WebPermissions_Enabled)
+		);
+		// stand-alone web worldguard
+		link.setEnabled(
+			"worldguard",
+			config.getBool(webConfig.PATH_Standalone_WebWorldGuard_Enabled)
+		);
+		// start updates
+		link.start();
 
 		isOk = true;
 
