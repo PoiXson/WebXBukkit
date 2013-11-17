@@ -66,11 +66,20 @@ public class LinkManager {
 	public static void register(ActionHandler handler) {
 		synchronized(handlers) {
 			String name = handler.getHandlerName();
-			if(!handlers.containsKey(name)) {
+			if(!handlers.containsKey(name))
 				handlers.put(name, handler);
-				Bukkit.getPluginManager().registerEvents(handler, WebAPI.get());
-			}
 		}
+	}
+
+
+	// handler enabled
+	public void setEnabled(String handlerName, boolean enabled) {
+		ActionHandler handler = getHandler(handlerName);
+		if(handler == null) {
+			System.out.println("Unknown web action handler: "+handlerName);
+			return;
+		}
+		handler.setEnabled(enabled);
 	}
 
 
@@ -140,7 +149,8 @@ public class LinkManager {
 	private void triggerUpdates() {
 		synchronized(handlers) {
 			for(ActionHandler handler : handlers.values())
-				handler.doUpdate(dbKey);
+				if(handler.isEnabled())
+					handler.doUpdate(dbKey);
 		}
 	}
 
