@@ -82,7 +82,7 @@ public class LinkManager {
 			task = new UpdateTask(this);
 			task.runTaskTimerAsynchronously(
 				WebAPI.get(),
-				xTime.get("5s").getTicks(),
+				xTime.get("6s").getTicks(),
 				xTime.get("3s").getTicks()
 			);
 		}
@@ -107,8 +107,11 @@ public class LinkManager {
 				}
 				active = true;
 			}
+			String threadName = Thread.currentThread().getName();
+			Thread.currentThread().setName("WebLinkUpdate");
 			manager.triggerUpdates();
 			manager.triggerActions();
+			Thread.currentThread().setName(threadName);
 			active = false;
 		}
 
