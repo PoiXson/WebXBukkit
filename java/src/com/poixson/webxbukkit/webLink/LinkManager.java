@@ -26,7 +26,7 @@ public class LinkManager {
 
 	// manager instances
 	private static final Map<String, LinkManager> instances  = new HashMap<String, LinkManager>();
-	private static final Map<String, ActionHandler> handlers = new HashMap<String, ActionHandler>();
+	private final Map<String, ActionHandler> handlers = new HashMap<String, ActionHandler>();
 
 	// db connection key
 	private final String dbKey;
@@ -39,13 +39,6 @@ public class LinkManager {
 	// get manager instance (per db key)
 	public static LinkManager get(String dbKey) {
 		synchronized(instances) {
-			if(instances.isEmpty()) {
-				// register default handlers
-				register(new economyHandler());
-				register(new inventoryHandler());
-				register(new permsHandler());
-				register(new worldguardHandler());
-			}
 			// use existing manager
 			if(instances.containsKey(dbKey))
 				return instances.get(dbKey);
@@ -59,16 +52,29 @@ public class LinkManager {
 	private LinkManager(String dbKey) {
 		if(dbKey == null || dbKey.isEmpty()) throw new NullPointerException("dbKey cannot be null");
 		this.dbKey = dbKey;
+		// register default handlers
+		register(new economyHandler());
+		register(new inventoryHandler());
+		register(new permsHandler());
+		register(new worldguardHandler());
 	}
 
 
 	// register action handler/listener
-	public static void register(ActionHandler handler) {
+	public void register(ActionHandler handler) {
 		synchronized(handlers) {
 			String name = handler.getHandlerName();
 			if(!handlers.containsKey(name))
 				handlers.put(name, handler);
 		}
+	}
+	// get handler
+	public ActionHandler getHandler(String handlerName) {
+		synchronized(handlers) {
+			if(handlers.containsKey(handlerName))
+				return handlers.get(handlerName);
+		}
+		return null;
 	}
 
 
