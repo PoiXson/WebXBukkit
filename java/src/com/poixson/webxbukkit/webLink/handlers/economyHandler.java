@@ -42,37 +42,40 @@ public class economyHandler extends ActionHandler {
 			// get online players
 			Player[] players = BukkitThreadSafe.getOnlinePlayers();
 			if(players.length == 0) return;
-			dbQuery db = dbQuery.get(dbKey);
-			try {
-				for(Player p : players) {
-					if(p == null) continue;
-					String playerName = p.getName();
-					Double money = econ.getBalance(playerName);
-					if(money == null) continue;
-					Double cached = cachedMoney.get(playerName);
-					// balance hasn't changed
-					if(cached != null && money == cached) continue;
-					// update db cache
-					db.prepare("UPDATE `pxn_Players` SET `money` = ? WHERE `name` = ? LIMIT 1");
-					db.setDecimal(1, money);
-					db.setString (2, playerName);
-					db.exec();
-					if(db.getAffectedRows() == 0) {
-						// insert new row
-						db.clean();
-						db.prepare("INSERT INTO `pxn_Players` (`name`, `money`) VALUES (?, ?)");
-						db.setString (1, playerName);
-						db.setDecimal(2, money);
-						db.exec();
-						if(db.getAffectedRows() == 0)
-							System.out.println("Failed to create new player account");
-					}
-					db.clean();
-					cachedMoney.put(playerName, money);
-				}
-			} finally {
-				db.release();
+			for(Player p : players) {
+				if(p == null) continue;
+				String playerName = p.getName();
+				Double money = econ.getBalance(playerName);
+				if(money == null) continue;
+				Double cached = cachedMoney.get(playerName);
+				// balance hasn't changed
+				if(cached != null && money == cached) continue;
+				// update db cache
+				doUpdate(playerName, money);
 			}
+		}
+	}
+	// update db cache
+	private void doUpdate(String playerName, double money) {
+		dbQuery db = dbQuery.get(dbKey);
+		try {
+			db.prepare("UPDATE `pxn_Players` SET `money` = ? WHERE `name` = ? LIMIT 1");
+			db.setDecimal(1, money);
+			db.setString (2, playerName);
+			db.exec();
+			if(db.getAffectedRows() == 0) {
+				// insert new row
+				db.clean();
+				db.prepare("INSERT INTO `pxn_Players` (`name`, `money`) VALUES (?, ?)");
+				db.setString (1, playerName);
+				db.setDecimal(2, money);
+				db.exec();
+				if(db.getAffectedRows() == 0)
+					System.out.println("Failed to create new player account");
+			}
+			cachedMoney.put(playerName, money);
+		} finally {
+			db.release();
 		}
 	}
 
@@ -85,6 +88,7 @@ public class economyHandler extends ActionHandler {
 		// action parser
 		StringParser action = event.getActionParser();
 		if(action == null || !action.next()) return;
+		Economy econ = WebAPI.get().getEconomy();
 
 		// deposit
 		if(action.isFirst("deposit")) {
@@ -97,10 +101,12 @@ public class economyHandler extends ActionHandler {
 				return;
 			}
 			// call vault api
-			WebAPI.get().getEconomy().depositPlayer(
+			econ.depositPlayer(
 				playerName,
 				amount
 			);
+			// update db cache
+			doUpdate(playerName, econ.getBalance(playerName));
 			System.out.println("Deposit "+Double.toString(amount)+" to "+playerName);
 		} else
 
@@ -115,10 +121,12 @@ public class economyHandler extends ActionHandler {
 				return;
 			}
 			// call vault api
-			WebAPI.get().getEconomy().withdrawPlayer(
+			econ.withdrawPlayer(
 				playerName,
 				amount
 			);
+			// update db cache
+			doUpdate(playerName, econ.getBalance(playerName));
 			System.out.println("Withdraw "+Double.toString(amount)+" from "+playerName);
 
 		// unknown action
