@@ -188,16 +188,16 @@ public class LinkManager {
 			// remove completed actions
 			int deleteSize = deleteList.size();
 			if(deleteSize > 0) {
-//				db.prepare("DELETE FROM `"+getTableName()+"` WHERE "+utilsString.repeat(" OR ", "`action_id` = ?", deleteSize)+" LIMIT "+Integer.toString(deleteSize));
-//				{
-//					int i = 0;
-//					for(int id : deleteList) {
-//						i++;
-//						db.setInt(i, id);
-//					}
-//					deleteList.clear();
-//				}
-//				db.exec();
+				db.prepare("DELETE FROM `"+getTableName()+"` WHERE "+utilsString.repeat(" OR ", "`action_id` = ?", deleteSize)+" LIMIT "+Integer.toString(deleteSize));
+				{
+					int i = 0;
+					for(int id : deleteList) {
+						i++;
+						db.setInt(i, id);
+					}
+					deleteList.clear();
+				}
+				db.exec();
 				System.out.println("Triggered [ "+Integer.toString(deleteSize)+" ] actions.");
 			}
 			db.clean();
@@ -207,7 +207,6 @@ public class LinkManager {
 			db.prepare("UNLOCK TABLES /* unlock actions table */");
 			db.exec();
 			db.release();
-System.exit(0);
 		}
 	}
 
