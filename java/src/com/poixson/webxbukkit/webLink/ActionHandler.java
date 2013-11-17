@@ -10,13 +10,20 @@ import com.poixson.webxbukkit.WebAPI;
 public abstract class ActionHandler implements Listener {
 
 	private volatile Boolean enabled = false;
+	protected final String dbKey;
+
+
+	public ActionHandler(String dbKey) {
+		if(dbKey == null || dbKey.isEmpty()) throw new NullPointerException("dbKey cannot be null");
+		this.dbKey = dbKey;
+	}
 
 
 	// handler name
 	public abstract String getHandlerName();
 
 	// outbound updates
-	public abstract void doUpdate(String dbKey);
+	public abstract void doUpdate();
 	// inbound updates
 	public abstract void onAction(ActionEvent event);
 

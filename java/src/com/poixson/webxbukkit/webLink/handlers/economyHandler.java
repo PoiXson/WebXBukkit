@@ -25,6 +25,9 @@ public class economyHandler extends ActionHandler {
 	private final Map<String, Double> cachedMoney = new HashMap<String, Double>();
 
 
+	public economyHandler(String dbKey) {
+		super(dbKey);
+	}
 	@Override
 	public String getHandlerName() {
 		return HANDLER_NAME;
@@ -33,7 +36,7 @@ public class economyHandler extends ActionHandler {
 
 	private final Object updateLock = new Object();
 	@Override
-	public void doUpdate(String dbKey) {
+	public void doUpdate() {
 		Economy econ = Plugins3rdParty.get().getEconomy();
 		synchronized(updateLock) {
 			// get online players

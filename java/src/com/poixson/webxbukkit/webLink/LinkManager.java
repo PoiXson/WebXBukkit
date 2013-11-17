@@ -53,10 +53,10 @@ public class LinkManager {
 		if(dbKey == null || dbKey.isEmpty()) throw new NullPointerException("dbKey cannot be null");
 		this.dbKey = dbKey;
 		// register default handlers
-		register(new economyHandler());
-		register(new inventoryHandler());
-		register(new permsHandler());
-		register(new worldguardHandler());
+		register(new economyHandler   (dbKey));
+		register(new inventoryHandler (dbKey));
+		register(new permsHandler     (dbKey));
+		register(new worldguardHandler(dbKey));
 	}
 
 
@@ -156,7 +156,7 @@ public class LinkManager {
 		synchronized(handlers) {
 			for(ActionHandler handler : handlers.values())
 				if(handler.isEnabled())
-					handler.doUpdate(dbKey);
+					handler.doUpdate();
 		}
 	}
 

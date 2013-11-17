@@ -11,6 +11,9 @@ public class worldguardHandler extends ActionHandler {
 	public static final String HANDLER_NAME = "worldguard";
 
 
+	public worldguardHandler(String dbKey) {
+		super(dbKey);
+	}
 	@Override
 	public String getHandlerName() {
 		return HANDLER_NAME;
@@ -18,7 +21,7 @@ public class worldguardHandler extends ActionHandler {
 
 
 	@Override
-	public void doUpdate(String dbKey) {
+	public void doUpdate() {
 	}
 
 
