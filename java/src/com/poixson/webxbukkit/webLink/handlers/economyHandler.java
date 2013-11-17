@@ -49,7 +49,9 @@ public class economyHandler extends ActionHandler {
 				if(money == null) continue;
 				Double cached = cachedMoney.get(playerName);
 				// balance hasn't changed
-				if(cached != null && money == cached) continue;
+				if(cached != null)
+					if(cached.doubleValue() == money.doubleValue())
+						continue;
 				// update db cache
 				doUpdateNow(dbKey, playerName, money);
 			}
@@ -75,8 +77,8 @@ public class economyHandler extends ActionHandler {
 					db.exec();
 					if(db.getAffectedRows() == 0)
 						System.out.println("Failed to create new player account");
-					cachedMoney.put(playerName, money);
 				}
+				cachedMoney.put(playerName, money);
 			}
 		} finally {
 			db.release();
