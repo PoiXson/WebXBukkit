@@ -11,6 +11,10 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 
 public class Plugins3rdParty {
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		throw new CloneNotSupportedException();
+	}
 
 	private static volatile Plugins3rdParty instance = null;
 	private static final Object lock = new Object();
