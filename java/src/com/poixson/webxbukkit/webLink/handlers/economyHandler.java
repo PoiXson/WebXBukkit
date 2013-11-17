@@ -7,6 +7,7 @@ import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.poixson.commonjava.Utils.StringParser;
 import com.poixson.commonjava.Utils.utilsMath;
@@ -34,11 +35,10 @@ public class economyHandler extends ActionHandler {
 	}
 
 
-	private final Object updateLock = new Object();
 	@Override
 	public void doUpdate() {
 		Economy econ = Plugins3rdParty.get().getEconomy();
-		synchronized(updateLock) {
+		synchronized(cachedMoney) {
 			// get online players
 			Player[] players = BukkitThreadSafe.getOnlinePlayers();
 			if(players.length == 0) return;
@@ -51,32 +51,58 @@ public class economyHandler extends ActionHandler {
 				// balance hasn't changed
 				if(cached != null && money == cached) continue;
 				// update db cache
-				doUpdate(playerName, money);
+				doUpdateNow(dbKey, playerName, money);
 			}
 		}
 	}
+
+
 	// update db cache
-	private void doUpdate(String playerName, double money) {
+	private void doUpdateNow(String dbKey, String playerName, double money) {
 		dbQuery db = dbQuery.get(dbKey);
 		try {
-			db.prepare("UPDATE `pxn_Players` SET `money` = ? WHERE `name` = ? LIMIT 1");
-			db.setDecimal(1, money);
-			db.setString (2, playerName);
-			db.exec();
-			if(db.getAffectedRows() == 0) {
-				// insert new row
-				db.clean();
-				db.prepare("INSERT INTO `pxn_Players` (`name`, `money`) VALUES (?, ?)");
-				db.setString (1, playerName);
-				db.setDecimal(2, money);
+			synchronized(cachedMoney) {
+				db.prepare("UPDATE `pxn_Players` SET `money` = ? WHERE `name` = ? LIMIT 1");
+				db.setDecimal(1, money);
+				db.setString (2, playerName);
 				db.exec();
-				if(db.getAffectedRows() == 0)
-					System.out.println("Failed to create new player account");
+				if(db.getAffectedRows() == 0) {
+					// insert new row
+					db.clean();
+					db.prepare("INSERT INTO `pxn_Players` (`name`, `money`) VALUES (?, ?)");
+					db.setString (1, playerName);
+					db.setDecimal(2, money);
+					db.exec();
+					if(db.getAffectedRows() == 0)
+						System.out.println("Failed to create new player account");
+					cachedMoney.put(playerName, money);
+				}
 			}
-			cachedMoney.put(playerName, money);
 		} finally {
 			db.release();
 		}
+	}
+	// update later
+	private void doUpdateLater(String dbKey, String playerName) {
+		(new UpdateCacheRecord(dbKey, playerName))
+			.runTaskAsynchronously(WebAPI.get());
+	}
+	private class UpdateCacheRecord extends BukkitRunnable {
+
+		private final String dbKey;
+		private final String playerName;
+
+		public UpdateCacheRecord(String dbKey, String playerName) {
+			this.dbKey = dbKey;
+			this.playerName = playerName;
+		}
+
+		@Override
+		public void run() {
+			double money = Plugins3rdParty.get().getEconomy().getBalance(playerName);
+			doUpdateNow(dbKey, playerName, money);
+		}
+
 	}
 
 
@@ -106,7 +132,7 @@ public class economyHandler extends ActionHandler {
 				amount
 			);
 			// update db cache
-			doUpdate(playerName, econ.getBalance(playerName));
+			doUpdateLater(dbKey, playerName);
 			System.out.println("Deposit "+Double.toString(amount)+" to "+playerName);
 		} else
 
@@ -126,7 +152,7 @@ public class economyHandler extends ActionHandler {
 				amount
 			);
 			// update db cache
-			doUpdate(playerName, econ.getBalance(playerName));
+			doUpdateLater(dbKey, playerName);
 			System.out.println("Withdraw "+Double.toString(amount)+" from "+playerName);
 
 		// unknown action
