@@ -50,7 +50,7 @@ public final class SettingsManager {
 			db.prepare("SELECT `setting_id`, `name`, `value` FROM `"+getTableName()+"`");
 			db.exec();
 			settings.clear();
-			while(db.hasNext()) {
+			while(db.next()) {
 				String name = db.getString("name");
 				String value = db.getString("value");
 				if(name == null || name.isEmpty() || value == null || value.isEmpty()) continue;

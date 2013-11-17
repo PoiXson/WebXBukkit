@@ -48,6 +48,7 @@ public class WebAPI extends JavaPlugin {
 	}
 	public WebAPI() {
 		super();
+debug = true;
 		synchronized(lock) {
 			if(instance != null) throw new RuntimeException("API already loaded?!");
 			instance = this;
@@ -85,8 +86,6 @@ public class WebAPI extends JavaPlugin {
 			System.out.println("WorldGuard plugin not found");
 		else
 			System.out.println("WorldGuard plugin found");
-
-		}
 
 		// plugin version
 		version = PluginVersion.get(this);
