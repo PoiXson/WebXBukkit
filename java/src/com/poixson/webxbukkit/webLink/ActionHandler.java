@@ -2,15 +2,16 @@ package com.poixson.webxbukkit.webLink;
 
 import org.bukkit.event.Listener;
 
+public abstract class ActionHandler implements Listener {
 
-public interface ActionHandler extends Listener {
 
 	// handler name
-	public String getHandlerName();
+	public abstract String getHandlerName();
 
 	// outbound updates
-	public void doUpdate(String dbKey);
+	public abstract void doUpdate(String dbKey);
 	// inbound updates
-	public void onAction(ActionEvent event);
+	public abstract void onAction(ActionEvent event);
+
 
 }

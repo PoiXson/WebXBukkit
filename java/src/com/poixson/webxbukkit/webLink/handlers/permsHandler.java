@@ -6,7 +6,7 @@ import com.poixson.webxbukkit.webLink.ActionEvent;
 import com.poixson.webxbukkit.webLink.ActionHandler;
 
 
-public class permsHandler implements ActionHandler {
+public class permsHandler extends ActionHandler {
 
 	public static final String HANDLER_NAME = "perms";
 

@@ -6,7 +6,7 @@ import com.poixson.webxbukkit.webLink.ActionEvent;
 import com.poixson.webxbukkit.webLink.ActionHandler;
 
 
-public class inventoryHandler implements ActionHandler {
+public class inventoryHandler extends ActionHandler {
 
 	public static final String HANDLER_NAME = "inventory";
 

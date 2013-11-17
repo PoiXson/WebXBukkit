@@ -6,7 +6,7 @@ import com.poixson.webxbukkit.webLink.ActionEvent;
 import com.poixson.webxbukkit.webLink.ActionHandler;
 
 
-public class worldguardHandler implements ActionHandler {
+public class worldguardHandler extends ActionHandler {
 
 	public static final String HANDLER_NAME = "worldguard";
 

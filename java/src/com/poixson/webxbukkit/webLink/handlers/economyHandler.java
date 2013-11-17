@@ -18,7 +18,7 @@ import com.poixson.webxbukkit.webLink.ActionEvent;
 import com.poixson.webxbukkit.webLink.ActionHandler;
 
 
-public class economyHandler implements ActionHandler {
+public class economyHandler extends ActionHandler {
 
 	public static final String HANDLER_NAME = "economy";
 
