@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.poixson.commonjava.Utils.utilsString;
 import com.poixson.commonjava.Utils.xTime;
 import com.poixson.commonjava.pxdb.dbQuery;
 import com.poixson.webxbukkit.WebAPI;
@@ -153,20 +153,18 @@ public class LinkManager {
 			// lock table
 			db.prepare("LOCK TABLES `"+getTableName()+"` WRITE /* lock actions table */");
 			if(!db.exec()) return;
-
-
 			// query table
 			db.prepare("SELECT `action_id`, `player`, `handler`, `action` FROM `"+getTableName()+"` "+
-				"WHERE TRUE ORDER BY `priority` DESC LIMIT 100 /* query actions table */");
+				"WHERE TRUE ORDER BY `priority` DESC, `action_id` ASC LIMIT 100 /* query actions table */");
 			if(!db.exec()) return;
-			PluginManager pm = Bukkit.getServer().getPluginManager();
 			List<Integer> deleteList = new ArrayList<Integer>();
-			while(db.hasNext()) {
+
+			// iterate actions
+			while(db.next()) {
 				String handlerName = db.getString("handler");
 				if(handlerName == null || handlerName.isEmpty()) {
 					// removal list
 					deleteList.add(db.getInt("action_id"));
-					db.clean();
 					continue;
 				}
 				// trigger event
@@ -177,14 +175,16 @@ public class LinkManager {
 					db.getString("handler"),
 					db.getString("action")
 				);
-				// call event from main thread
-				(new ActionTask(event))
-					.runTask(WebAPI.get());
-				pm.callEvent(event);
+				{
+					// call event from main thread
+					ActionTask task = new ActionTask(event);
+					task.runTask(WebAPI.get());
+				}
 				// removal list
 				deleteList.add(db.getInt("action_id"));
-				db.clean();
 			}
+			db.clean();
+
 			// remove completed actions
 			int deleteSize = deleteList.size();
 			if(deleteSize > 0) {
@@ -195,13 +195,12 @@ public class LinkManager {
 //						i++;
 //						db.setInt(i, id);
 //					}
+//					deleteList.clear();
 //				}
 //				db.exec();
 				System.out.println("Triggered [ "+Integer.toString(deleteSize)+" ] actions.");
 			}
 			db.clean();
-
-
 
 		} finally {
 			// unlock table
