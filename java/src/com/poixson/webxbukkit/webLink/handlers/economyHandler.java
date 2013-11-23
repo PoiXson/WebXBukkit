@@ -12,8 +12,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.poixson.commonjava.Utils.StringParser;
 import com.poixson.commonjava.Utils.utilsMath;
 import com.poixson.commonjava.pxdb.dbQuery;
-import com.poixson.webxbukkit.BukkitThreadSafe;
 import com.poixson.webxbukkit.Plugins3rdParty;
+import com.poixson.webxbukkit.SafetyBukkit;
 import com.poixson.webxbukkit.WebAPI;
 import com.poixson.webxbukkit.webLink.ActionEvent;
 import com.poixson.webxbukkit.webLink.ActionHandler;
@@ -40,8 +40,15 @@ public class economyHandler extends ActionHandler {
 		Economy econ = Plugins3rdParty.get().getEconomy();
 		synchronized(cachedMoney) {
 			// get online players
-			Player[] players = BukkitThreadSafe.getOnlinePlayers();
+			Player[] players;
+			try {
+				players = SafetyBukkit.getOnlinePlayers();
+			} catch (Exception e) {
+				e.printStackTrace();
+				return;
+			}
 			if(players.length == 0) return;
+			// update db cache for each player
 			for(Player p : players) {
 				if(p == null) continue;
 				String playerName = p.getName();
