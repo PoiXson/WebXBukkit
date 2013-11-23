@@ -16,3 +16,5 @@ build
 *.swp
 *.out
 
+java/src/com/poixson/commonjava
+
