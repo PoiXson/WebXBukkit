@@ -25,7 +25,8 @@ public class LinkManager {
 	}
 
 	// manager instances
-	private static final Map<String, LinkManager> instances  = new HashMap<String, LinkManager>();
+	private static final Map<String, LinkManager> managers  = new HashMap<String, LinkManager>();
+	// handler instances
 	private final Map<String, ActionHandler> handlers = new HashMap<String, ActionHandler>();
 
 	// db connection key
@@ -38,13 +39,13 @@ public class LinkManager {
 
 	// get manager instance (per db key)
 	public static LinkManager get(String dbKey) {
-		synchronized(instances) {
+		synchronized(managers) {
 			// use existing manager
-			if(instances.containsKey(dbKey))
-				return instances.get(dbKey);
+			if(managers.containsKey(dbKey))
+				return managers.get(dbKey);
 			// new manager instance
 			LinkManager manager = new LinkManager(dbKey);
-			instances.put(dbKey, manager);
+			managers.put(dbKey, manager);
 			return manager;
 		}
 	}
