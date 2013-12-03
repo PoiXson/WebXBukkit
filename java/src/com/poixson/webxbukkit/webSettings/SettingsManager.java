@@ -64,7 +64,7 @@ public final class SettingsManager {
 	}
 
 
-	public String getTableName() {
+	private String getTableName() {
 		return dbQuery.san("pxn_Settings");
 	}
 
