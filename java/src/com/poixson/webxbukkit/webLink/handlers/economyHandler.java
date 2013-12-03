@@ -7,7 +7,6 @@ import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import com.poixson.commonjava.Utils.StringParser;
 import com.poixson.commonjava.Utils.utilsMath;
@@ -58,9 +57,8 @@ public class economyHandler extends ActionHandler {
 	}
 
 
-	// update db cache
-	private void doUpdateNow(String dbKey, String playerName, double money) {
-		dbQuery db = dbQuery.get(dbKey);
+	// push to db
+	private void UpdateCache(String playerName, double money) {
 		try {
 			synchronized(cachedMoney) {
 				db.prepare("UPDATE `pxn_Players` SET `money` = ? WHERE `name` = ? LIMIT 1");
@@ -82,28 +80,6 @@ public class economyHandler extends ActionHandler {
 		} finally {
 			db.release();
 		}
-	}
-	// update later
-	private void doUpdateLater(String dbKey, String playerName) {
-		(new UpdateCacheRecord(dbKey, playerName))
-			.runTaskAsynchronously(WebAPI.get());
-	}
-	private class UpdateCacheRecord extends BukkitRunnable {
-
-		private final String dbKey;
-		private final String playerName;
-
-		public UpdateCacheRecord(String dbKey, String playerName) {
-			this.dbKey = dbKey;
-			this.playerName = playerName;
-		}
-
-		@Override
-		public void run() {
-			double money = Plugins3rdParty.get().getEconomy().getBalance(playerName);
-			doUpdateNow(dbKey, playerName, money);
-		}
-
 	}
 
 
@@ -135,9 +111,11 @@ public class economyHandler extends ActionHandler {
 				amount
 			);
 			// update db cache
-			doUpdateLater(dbKey, playerName);
+			UpdateCache(playerName, amount);
+			// done
 			System.out.println("Deposit "+Double.toString(amount)+" to "+playerName);
-		} else
+			return;
+		}
 
 		// withdraw
 		if(action.isFirst("withdraw")) {
@@ -155,13 +133,14 @@ public class economyHandler extends ActionHandler {
 				amount
 			);
 			// update db cache
-			doUpdateLater(dbKey, playerName);
+			UpdateCache(playerName, amount);
+			// done
 			System.out.println("Withdraw "+Double.toString(amount)+" from "+playerName);
+			return;
+		}
 
 		// unknown action
-		} else {
-			System.out.println("Failed to execute action: "+event.toString());
-		}
+		System.out.println("Failed to execute action: "+event.toString());
 	}
 
 
