@@ -7,8 +7,7 @@ import com.poixson.webxbukkit.webLink.ActionHandler;
 
 
 public class permsHandler extends ActionHandler {
-
-	public static final String HANDLER_NAME = "perms";
+	private static final String HANDLER_NAME = "perms";
 
 
 	public permsHandler(String dbKey) {

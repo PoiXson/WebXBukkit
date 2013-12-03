@@ -7,8 +7,7 @@ import com.poixson.webxbukkit.webLink.ActionHandler;
 
 
 public class inventoryHandler extends ActionHandler {
-
-	public static final String HANDLER_NAME = "inventory";
+	private static final String HANDLER_NAME = "inventory";
 
 
 	public inventoryHandler(String dbKey) {

@@ -7,8 +7,7 @@ import com.poixson.webxbukkit.webLink.ActionHandler;
 
 
 public class worldguardHandler extends ActionHandler {
-
-	public static final String HANDLER_NAME = "worldguard";
+	private static final String HANDLER_NAME = "worldguard";
 
 
 	public worldguardHandler(String dbKey) {

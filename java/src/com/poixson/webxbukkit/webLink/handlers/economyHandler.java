@@ -20,8 +20,8 @@ import com.poixson.webxbukkit.webLink.ActionHandler;
 
 
 public class economyHandler extends ActionHandler {
+	private static final String HANDLER_NAME = "economy";
 
-	public static final String HANDLER_NAME = "economy";
 
 	private final Map<String, Double> cachedMoney = new HashMap<String, Double>();
 
