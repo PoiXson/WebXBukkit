@@ -1,7 +1,7 @@
 package com.poixson.webxbukkit.webLink.handlers;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import net.milkbowl.vault.economy.Economy;
 
@@ -22,8 +22,7 @@ import com.poixson.webxbukkit.webLink.ActionHandler;
 public class economyHandler extends ActionHandler {
 	private static final String HANDLER_NAME = "economy";
 
-
-	private final Map<String, Double> cachedMoney = new HashMap<String, Double>();
+	private final Map<String, Double> cache = new ConcurrentHashMap<String, Double>();
 
 
 	public economyHandler(String dbKey) {
@@ -41,21 +40,19 @@ public class economyHandler extends ActionHandler {
 		// get online players
 		Player[] players = SafetyBukkit.getOnlinePlayers();
 		if(players == null || players.length == 0) return;
-		synchronized(cachedMoney) {
-			// update db cache for each player
-			for(Player p : players) {
-				if(p == null) continue;
-				String playerName = p.getName();
-				Double money = econ.getBalance(playerName);
-				if(money == null) continue;
-				Double cached = cachedMoney.get(playerName);
-				// balance hasn't changed
-				if(cached != null)
-					if(cached.doubleValue() == money.doubleValue())
-						continue;
-				// update db cache
-				doUpdateNow(dbKey, playerName, money);
-			}
+		// update db cache for each player
+		for(Player p : players) {
+			if(p == null) continue;
+			String playerName = p.getName();
+			if(playerName == null || playerName.isEmpty()) continue;
+			Double money = econ.getBalance(playerName);
+			if(money == null) continue;
+			Double cached = cache.get(playerName);
+			// balance hasn't changed
+			if(cached != null && cached.doubleValue() == money.doubleValue())
+				continue;
+			// update db cache
+			UpdateCache(playerName, money);
 		}
 	}
 
