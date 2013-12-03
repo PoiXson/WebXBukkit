@@ -19,16 +19,19 @@ public class inventoryHandler extends ActionHandler {
 	}
 
 
+	// update db cache
 	@Override
 	public void doUpdate() {
 	}
 
 
+	// perform action
 	@Override
 	@EventHandler
 	public void onAction(ActionEvent event) {
+		if(!event.isHandler(getHandlerName())) return;
 		if(event.isCancelled()) return;
-		if(!event.isHandler(HANDLER_NAME)) return;
+		if(!event.complete()) return;
 		// process inventory action
 //System.out.println("ACTION EVENT: "+event.getActionName());
 	}

@@ -34,6 +34,7 @@ public class economyHandler extends ActionHandler {
 	}
 
 
+	// update db cache
 	@Override
 	public void doUpdate() {
 		Economy econ = Plugins3rdParty.get().getEconomy();
@@ -106,11 +107,13 @@ public class economyHandler extends ActionHandler {
 	}
 
 
+	// perform action
 	@Override
 	@EventHandler
 	public void onAction(ActionEvent event) {
+		if(!event.isHandler(getHandlerName())) return;
 		if(event.isCancelled()) return;
-		if(!event.isHandler(HANDLER_NAME)) return;
+		if(!event.complete()) return;
 		// action parser
 		StringParser action = event.getActionParser();
 		if(action == null || !action.next()) return;
