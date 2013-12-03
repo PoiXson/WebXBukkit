@@ -1,6 +1,7 @@
 package com.poixson.webxbukkit;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -23,7 +24,7 @@ public class SafetyBukkit {
 	public static int getOnlineCount() {
 		return Bukkit.getOnlinePlayers().length;
 	}
-	public static Player[] getOnlinePlayers() throws Exception {
+	public static Player[] getOnlinePlayers() {
 		// run in server thread
 		if(isServerThread()) {
 			// get online players
@@ -37,7 +38,11 @@ public class SafetyBukkit {
 				}
 			};
 			// call in main thread
-			return Bukkit.getScheduler().callSyncMethod(WebAPI.get(), task).get();
+			try {
+				return Bukkit.getScheduler().callSyncMethod(WebAPI.get(), task).get();
+			} catch (InterruptedException | ExecutionException ignore) {
+				return null;
+			}
 		}
 	}
 

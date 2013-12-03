@@ -38,16 +38,10 @@ public class economyHandler extends ActionHandler {
 	@Override
 	public void doUpdate() {
 		Economy econ = Plugins3rdParty.get().getEconomy();
+		// get online players
+		Player[] players = SafetyBukkit.getOnlinePlayers();
+		if(players == null || players.length == 0) return;
 		synchronized(cachedMoney) {
-			// get online players
-			Player[] players;
-			try {
-				players = SafetyBukkit.getOnlinePlayers();
-			} catch (Exception e) {
-				e.printStackTrace();
-				return;
-			}
-			if(players.length == 0) return;
 			// update db cache for each player
 			for(Player p : players) {
 				if(p == null) continue;
