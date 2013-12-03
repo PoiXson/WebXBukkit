@@ -10,7 +10,7 @@ import com.poixson.webxbukkit.WebAPI;
 public abstract class ActionHandler implements Listener {
 
 	private volatile Boolean enabled = false;
-	protected final String dbKey;
+	private final String dbKey;
 
 
 	public ActionHandler(String dbKey) {
@@ -49,6 +49,11 @@ public abstract class ActionHandler implements Listener {
 	}
 	public boolean isEnabled() {
 		return enabled;
+	}
+
+
+	protected String dbKey() {
+		return dbKey;
 	}
 
 

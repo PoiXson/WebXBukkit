@@ -14,6 +14,7 @@ public class ActionEvent extends Event implements Cancellable {
 
 	private static final HandlerList handlers = new HandlerList();
 	private volatile boolean cancelled = false;
+	private volatile Boolean completed = null;
 
 	private final String dbKey;
 	private final int    id;
@@ -91,6 +92,14 @@ public class ActionEvent extends Event implements Cancellable {
 	@Override
 	public void setCancelled(boolean cancel) {
 		cancelled = cancel;
+	}
+
+
+	// remove completed action from db
+	public boolean complete() {
+		if(completed == null)
+			completed = LinkManager.removeAction(dbKey, id);
+		return completed;
 	}
 
 
