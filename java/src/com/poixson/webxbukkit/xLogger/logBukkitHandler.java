@@ -38,4 +38,20 @@ public class logBukkitHandler extends logHandlerConsole {
 	}
 
 
+	// log level
+	@Override
+	public void setLevel(xLevel lvl) {
+		super.setLevel(lvl);
+		java.util.logging.Level level =
+			xVars.debug() ?
+				java.util.logging.Level.ALL :
+				lvl.getJavaLevel();
+		// set bukkit log level (if needed)
+		_getBukkitLogger().setLevel(level);
+		for(java.util.logging.Handler h : _getBukkitHandlers())
+			if(h.getLevel().intValue() > level.intValue())
+				h.setLevel(level);
+	}
+
+
 }
