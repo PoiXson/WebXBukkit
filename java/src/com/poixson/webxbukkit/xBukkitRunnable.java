@@ -2,6 +2,9 @@ package com.poixson.webxbukkit;
 
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.poixson.commonjava.xVars;
+import com.poixson.commonjava.xLogger.xLog;
+
 
 public abstract class xBukkitRunnable extends BukkitRunnable {
 
@@ -35,7 +38,7 @@ public abstract class xBukkitRunnable extends BukkitRunnable {
 		if(!concurrent) {
 			synchronized(lock) {
 				if(active > 0) {
-					System.out.println(Thread.currentThread().getName()+" still running..");
+					log().warning(Thread.currentThread().getName()+" still running..");
 					return;
 				}
 			}
@@ -49,12 +52,35 @@ public abstract class xBukkitRunnable extends BukkitRunnable {
 			final Thread thread = Thread.currentThread();
 			final String savedThreadName = thread.getName();
 			thread.setName(this.threadName);
-			// run
-			this.runTask();
+			try {
+				// run
+				this.runTask();
+			} catch (Exception e) {
+				log().trace(e);
+			}
 			// reset thread name
 			thread.setName(savedThreadName);
 		}
 		active--;
+	}
+
+
+	// logger
+	private volatile xLog _log = null;
+	private final Object logLock = new Object();
+	public xLog log() {
+		if(_log == null) {
+			synchronized(logLock) {
+				if(_log == null)
+					_log = xVars.log();
+			}
+		}
+		return _log;
+	}
+	public void setLog(xLog log) {
+		synchronized(logLock) {
+			_log = log;
+		}
 	}
 
 

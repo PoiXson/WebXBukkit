@@ -1,5 +1,6 @@
 package com.poixson.webxbukkit.webLink;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +10,7 @@ import com.poixson.commonjava.Utils.CoolDown;
 import com.poixson.commonjava.Utils.utilsMath;
 import com.poixson.commonjava.Utils.xTime;
 import com.poixson.commonjava.pxdb.dbQuery;
+import com.poixson.commonjava.xLogger.xLog;
 import com.poixson.webxbukkit.SafetyBukkit;
 import com.poixson.webxbukkit.WebAPI;
 import com.poixson.webxbukkit.xBukkitRunnable;
@@ -147,7 +149,7 @@ public class LinkManager {
 		// query actions
 		ActionEvent[] actions = queryActions(db);
 		if(actions == null) {
-			System.out.println("Failed to query actions!");
+			log().severe("Failed to query actions!");
 			return;
 		}
 		if(actions.length == 0)
@@ -162,7 +164,7 @@ public class LinkManager {
 			SafetyBukkit.callEvent(event);
 			count++;
 		}
-		System.out.println("Trigger [ "+Integer.toString(count)+" ] actions..");
+		log().info("Trigger [ "+Integer.toString(count)+" ] actions..");
 	}
 	// update db cache (outbound)
 	private void execUpdates() {
@@ -197,6 +199,7 @@ public class LinkManager {
 		while(db.next()) {
 			String handlerName = db.getString("handler");
 			if(handlerName != null && !handlerName.isEmpty()) {
+				try {
 				// action event
 				actions.add(
 					new ActionEvent(
@@ -208,6 +211,9 @@ public class LinkManager {
 					)
 				);
 				lastId = db.getInt("action_id");
+				} catch (SQLException e) {
+					log().trace(e);
+				}
 			}
 		}
 		db.clean();
@@ -252,7 +258,7 @@ public class LinkManager {
 	public void setEnabled(String handlerName, boolean enabled) {
 		ActionHandler handler = getHandler(handlerName);
 		if(handler == null) {
-			System.out.println("Unknown web action handler: "+handlerName);
+			log().warning("Unknown web action handler: "+handlerName);
 			return;
 		}
 		handler.setEnabled(enabled);
@@ -260,10 +266,32 @@ public class LinkManager {
 	public Boolean getEnabled(String handlerName) {
 		ActionHandler handler = getHandler(handlerName);
 		if(handler == null) {
-			System.out.println("Unknown web action handler: "+handlerName);
+			log().warning("Unknown web action handler: "+handlerName);
 			return null;
 		}
 		return handler.isEnabled();
+	}
+
+
+	// logger
+	private volatile xLog _log = null;
+	private final Object logLock = new Object();
+	public xLog log() {
+		if(_log == null) {
+			synchronized(logLock) {
+				if(_log == null)
+					_log = WebAPI.log("WebLink");
+			}
+		}
+		return _log;
+	}
+	public xLog log(String name) {
+		return log().get(name);
+	}
+	public void setLog(xLog log) {
+		synchronized(logLock) {
+			_log = log;
+		}
 	}
 
 

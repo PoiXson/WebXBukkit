@@ -9,6 +9,8 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.poixson.commonjava.xVars;
+import com.poixson.commonjava.xLogger.xLog;
 import com.poixson.webxbukkit.webLink.ActionEvent;
 
 
@@ -70,10 +72,16 @@ public class SafetyBukkit {
 		Bukkit.getPluginManager().callEvent(event);
 		if(event instanceof Cancellable) {
 			if( ((Cancellable)event).isCancelled() )
-				System.out.println("Event "+Integer.toString( ((ActionEvent)event).getId() )+" was cancelled.");
+				log().fine("Event "+Integer.toString( ((ActionEvent)event).getId() )+" was cancelled.");
 			else
-				System.out.println("Event "+Integer.toString( ((ActionEvent)event).getId() )+" was called.");
+				log().fine("Event "+Integer.toString( ((ActionEvent)event).getId() )+" was called.");
 		}
+	}
+
+
+	// logger
+	public static xLog log() {
+		return xVars.log();
 	}
 
 

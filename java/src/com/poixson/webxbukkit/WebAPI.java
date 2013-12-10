@@ -10,9 +10,13 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.MetricsManager;
 
+import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.pxdb.dbQuery;
+import com.poixson.commonjava.xLogger.xLog;
+import com.poixson.commonjava.xLogger.console.xNoConsole;
 import com.poixson.webxbukkit.webLink.LinkManager;
 import com.poixson.webxbukkit.webSettings.SettingsManager;
+import com.poixson.webxbukkit.xLogger.logBukkit;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 
@@ -20,7 +24,6 @@ public class WebAPI extends JavaPlugin {
 
 	private static volatile WebAPI instance = null;
 	private static final Object lock = new Object();
-//	private static volatile xLog log = null;
 
 	// objects
 	private volatile webConfig config = null;
@@ -49,6 +52,8 @@ public class WebAPI extends JavaPlugin {
 	public WebAPI() {
 		super();
 debug = true;
+		// init logger
+		logBukkit.init();
 		synchronized(lock) {
 			if(instance != null) throw new RuntimeException("API already loaded?!");
 			instance = this;
@@ -78,14 +83,14 @@ debug = true;
 		}
 		// load vault economy
 		if(Plugins3rdParty.get().getEconomy() == null)
-			System.out.println("Economy plugin not found");
+			log().info("Economy plugin not found");
 		else
-			System.out.println("Economy plugin found");
+			log().info("Economy plugin found");
 		// load world guard
 		if(Plugins3rdParty.get().getWorldGuard() == null)
-			System.out.println("WorldGuard plugin not found");
+			log().info("WorldGuard plugin not found");
 		else
-			System.out.println("WorldGuard plugin found");
+			log().info("WorldGuard plugin found");
 
 		// plugin version
 		version = PluginVersion.get(this);
@@ -180,9 +185,27 @@ debug = true;
 	}
 	public Economy getEconomy() {
 		return Plugins3rdParty.get().getEconomy();
+
+
+	// logger
+	private static volatile xLog _log = null;
+	private static final Object logLock = new Object();
+	public static xLog log() {
+		if(_log == null) {
+			synchronized(logLock) {
+				if(_log == null)
+					_log = xVars.log("WebLink");
+			}
+		}
+		return _log;
 	}
-	public WorldGuardPlugin getWorldGuard() {
-		return Plugins3rdParty.get().getWorldGuard();
+	public static xLog log(String name) {
+		return log().get(name);
+	}
+	public static void setLog(xLog log) {
+		synchronized(logLock) {
+			_log = log;
+		}
 	}
 
 

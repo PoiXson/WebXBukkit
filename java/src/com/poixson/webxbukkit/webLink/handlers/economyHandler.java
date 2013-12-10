@@ -108,7 +108,7 @@ public class economyHandler extends ActionHandler {
 			// amount
 			final Double amount = utilsMath.parseDouble(action.getNext());
 			if(amount == null) {
-				System.out.println("Invalid deposit amount "+action.get());
+				log().warning("Invalid deposit amount "+action.get());
 				return;
 			}
 			// call vault api
@@ -119,7 +119,7 @@ public class economyHandler extends ActionHandler {
 			// update db cache
 			UpdateCache(playerName);
 			// done
-			System.out.println("Deposit "+Double.toString(amount)+" to "+playerName);
+			log().stats("Deposit "+Double.toString(amount)+" to "+playerName);
 			return;
 		}
 
@@ -130,7 +130,7 @@ public class economyHandler extends ActionHandler {
 			// amount
 			final Double amount = utilsMath.parseDouble(action.getNext());
 			if(amount == null) {
-				System.out.println("Invalid withdraw amount "+action.get());
+				log().warning("Invalid withdraw amount "+action.get());
 				return;
 			}
 			// call vault api
@@ -141,12 +141,13 @@ public class economyHandler extends ActionHandler {
 			// update db cache
 			UpdateCache(playerName);
 			// done
-			System.out.println("Withdraw "+Double.toString(amount)+" from "+playerName);
+			log().stats("Withdraw "+Double.toString(amount)+" from "+playerName);
 			return;
 		}
 
 		// unknown action
-		System.out.println("Failed to execute action: "+event.toString());
+		log().warning("Failed to execute action: "+event.toString());
+	}
 	}
 
 

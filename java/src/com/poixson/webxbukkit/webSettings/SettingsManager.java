@@ -1,8 +1,11 @@
 package com.poixson.webxbukkit.webSettings;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 
+import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.pxdb.dbQuery;
+import com.poixson.commonjava.xLogger.xLog;
 
 
 public final class SettingsManager {
@@ -44,20 +47,24 @@ public final class SettingsManager {
 			// db connection
 			dbQuery db = dbQuery.get(dbKey);
 			if(db == null) {
-				System.out.println("Failed to find db connection.");
+				log().severe("Failed to find db connection.");
 				return;
 			}
 			db.prepare("SELECT `setting_id`, `name`, `value` FROM `"+getTableName()+"`");
 			db.exec();
 			settings.clear();
 			while(db.next()) {
-				String name = db.getString("name");
-				String value = db.getString("value");
-				if(name == null || name.isEmpty() || value == null || value.isEmpty()) continue;
-				settings.put(
-					name,
-					value
-				);
+				try {
+					String name  = db.getStr("name");
+					String value = db.getStr("value");
+					if(name == null || name.isEmpty()) continue;
+					settings.put(
+						name,
+						value
+					);
+				} catch (SQLException e) {
+					log().trace(e);
+				}
 			}
 			db.release();
 		}
@@ -66,6 +73,25 @@ public final class SettingsManager {
 
 	private String getTableName() {
 		return dbQuery.san("pxn_Settings");
+	}
+
+
+	// logger
+	private volatile xLog _log = null;
+	private final Object logLock = new Object();
+	public xLog log() {
+		if(_log == null) {
+			synchronized(logLock) {
+				if(_log == null)
+					_log = xVars.log();
+			}
+		}
+		return _log;
+	}
+	public void setLog(xLog log) {
+		synchronized(logLock) {
+			_log = log;
+		}
 	}
 
 
