@@ -192,7 +192,7 @@ xLog.getRoot().get("db").setLevel(xLevel.INFO);
 		if(_log == null) {
 			synchronized(logLock) {
 				if(_log == null)
-					_log = xVars.log("WebLink");
+					_log = xVars.log("WebAPI");
 			}
 		}
 		return _log;
