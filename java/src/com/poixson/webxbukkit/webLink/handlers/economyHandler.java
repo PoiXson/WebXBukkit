@@ -13,7 +13,6 @@ import com.poixson.commonjava.Utils.utilsMath;
 import com.poixson.commonjava.pxdb.dbQuery;
 import com.poixson.webxbukkit.Plugins3rdParty;
 import com.poixson.webxbukkit.SafetyBukkit;
-import com.poixson.webxbukkit.WebAPI;
 import com.poixson.webxbukkit.webLink.ActionEvent;
 import com.poixson.webxbukkit.webLink.ActionHandler;
 
@@ -99,7 +98,7 @@ public class economyHandler extends ActionHandler {
 		// action parser
 		StringParser action = event.getActionParser();
 		if(action == null || !action.next()) return;
-		Economy econ = WebAPI.get().getEconomy();
+		Economy econ = Plugins3rdParty.get().getEconomy();
 
 		// deposit
 		if(action.isFirst("deposit")) {
@@ -147,7 +146,6 @@ public class economyHandler extends ActionHandler {
 
 		// unknown action
 		log().warning("Failed to execute action: "+event.toString());
-	}
 	}
 
 
