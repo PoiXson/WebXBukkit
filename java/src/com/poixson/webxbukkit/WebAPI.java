@@ -10,6 +10,7 @@ import org.mcstats.MetricsManager;
 
 import com.poixson.commonjava.xVars;
 import com.poixson.commonjava.pxdb.dbQuery;
+import com.poixson.commonjava.xLogger.xLevel;
 import com.poixson.commonjava.xLogger.xLog;
 import com.poixson.commonjava.xLogger.console.xNoConsole;
 import com.poixson.webxbukkit.webLink.LinkManager;
@@ -47,7 +48,7 @@ public class WebAPI extends JavaPlugin {
 	}
 	public WebAPI() {
 		super();
-xVars.debug(true);
+//xVars.debug(true);
 		// init logger
 		logBukkit.init();
 		synchronized(lock) {
@@ -65,6 +66,8 @@ xVars.debug(true);
 	// enable api plugin
 	@Override
 	public void onEnable() {
+xLog.getRoot().setLevel(xLevel.FINEST);
+xLog.getRoot().get("db").setLevel(xLevel.INFO);
 		synchronized(lock) {
 			if(isOk != null) {
 				getServer().getConsoleSender().sendMessage(ChatColor.RED+"************************************");
