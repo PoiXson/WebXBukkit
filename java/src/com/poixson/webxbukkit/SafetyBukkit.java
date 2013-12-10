@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.poixson.commonjava.xVars;
@@ -75,6 +76,34 @@ public class SafetyBukkit {
 				log().fine("Event "+Integer.toString( ((ActionEvent)event).getId() )+" was cancelled.");
 			else
 				log().fine("Event "+Integer.toString( ((ActionEvent)event).getId() )+" was called.");
+		}
+	}
+
+
+	// open inventory
+	public static void openInventory(Player player, Inventory chest) {
+		if(isServerThread()) {
+			doOpenInventory(player, chest);
+		} else {
+			(new InventoryOpener(player, chest))
+				.runTask(WebAPI.get());
+		}
+	}
+	private static class InventoryOpener extends BukkitRunnable {
+		private final Player player;
+		private final Inventory chest;
+		public InventoryOpener(Player player, Inventory chest) {
+			this.player = player;
+			this.chest = chest;
+		}
+		@Override
+		public void run() {
+			doOpenInventory(player, chest);
+		}
+	}
+	private static void doOpenInventory(Player player, Inventory chest) {
+		synchronized(chest) {
+			player.openInventory(chest);
 		}
 	}
 
