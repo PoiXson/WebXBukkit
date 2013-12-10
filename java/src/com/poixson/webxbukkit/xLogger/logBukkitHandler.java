@@ -42,6 +42,7 @@ public class logBukkitHandler extends logHandlerConsole {
 	@Override
 	public void setLevel(xLevel lvl) {
 		super.setLevel(lvl);
+		if(lvl == null) return;
 		java.util.logging.Level level =
 			xVars.debug() ?
 				java.util.logging.Level.ALL :
