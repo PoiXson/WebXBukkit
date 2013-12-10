@@ -2,8 +2,6 @@ package com.poixson.webxbukkit;
 
 import java.io.IOException;
 
-import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
@@ -17,7 +15,6 @@ import com.poixson.commonjava.xLogger.console.xNoConsole;
 import com.poixson.webxbukkit.webLink.LinkManager;
 import com.poixson.webxbukkit.webSettings.SettingsManager;
 import com.poixson.webxbukkit.xLogger.logBukkit;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 
 public class WebAPI extends JavaPlugin {
@@ -39,7 +36,6 @@ public class WebAPI extends JavaPlugin {
 
 	// null=unloaded false=failed true=loaded
 	private static volatile Boolean isOk = null;
-	private static volatile boolean debug = false;
 
 
 	// get instance
@@ -51,19 +47,18 @@ public class WebAPI extends JavaPlugin {
 	}
 	public WebAPI() {
 		super();
-debug = true;
+xVars.debug(true);
 		// init logger
 		logBukkit.init();
 		synchronized(lock) {
 			if(instance != null) throw new RuntimeException("API already loaded?!");
 			instance = this;
 		}
+		// disable console (let bukkit handle this)
+		xLog.setConsole(new xNoConsole());
 	}
 	public static boolean isOk() {
 		return isOk;
-	}
-	public boolean isDebug() {
-		return debug;
 	}
 
 
@@ -126,8 +121,6 @@ debug = true;
 			"worldguard",
 			config.getBool(webConfig.PATH_Standalone_WebWorldGuard_Enabled)
 		);
-		// start updates
-		link.start();
 
 		isOk = true;
 
@@ -154,7 +147,8 @@ debug = true;
 		try {
 			Bukkit.getScheduler().cancelTasks(this);
 		} catch (Exception ignore) {}
-
+		// stop web link updates
+		LinkManager.shutdown();
 
 
 		isOk = null;
@@ -180,11 +174,12 @@ debug = true;
 
 
 	// get objects
+	public String dbKey() {
+		return dbKey;
+	}
 	public dbQuery getDB() {
 		return dbQuery.get(dbKey);
 	}
-	public Economy getEconomy() {
-		return Plugins3rdParty.get().getEconomy();
 
 
 	// logger
