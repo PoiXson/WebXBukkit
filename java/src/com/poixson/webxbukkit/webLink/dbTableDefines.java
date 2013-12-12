@@ -24,6 +24,16 @@ public class dbTableDefines extends dbTableManager {
 				.addField("str",	"ip",			"15",	null,	true)
 				.unique("player");
 		createIfMissing(tablePlayers);
+		// PlayerPerms table
+		TableDAO tablePlayerPerms =
+			defineTable("PlayerPerms")
+				.idField("perm_id")
+				//			type	name			size	default	nullable
+				.addField("str",	"player",		"32",	null,	false)
+				.addField("str",	"node",			"128",	null,	false)
+				.addField("bool",	"allow",		null,	"0",	false)
+				.unique("player", "node");
+		createIfMissing(tablePlayerPerms);
 		// Actions table
 		TableDAO tableActions =
 			defineTable("Actions")
@@ -34,11 +44,23 @@ public class dbTableDefines extends dbTableManager {
 				.addField("str",	"handler",		"16",	null,	true)
 				.addField("str",	"action",		"255",	null,	true);
 		createIfMissing(tableActions);
+		// Inventory table
+		TableDAO tableInventory =
+			defineTable("Inventory")
+				.idField("inv_id")
+				//			type	name			size	default	nullable
+				.addField("str",	"item",			"32",	null,	true)
+				.addField("int",	"item_damage",	"11",	null,	true)
+				.addField("text",	"item_meta",	null,	null,	true)
+				.addField("int",	"qty",			"11",	"0",	false)
+				.addField("str",	"player",		"32",	null,	true);
+		createIfMissing(tableInventory);
 	}
 
 
 	@Override
 	protected dbQuery getDB() {
+//TODO:
 		return null;
 	}
 
