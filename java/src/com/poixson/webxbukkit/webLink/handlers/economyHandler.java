@@ -89,6 +89,14 @@ public class economyHandler extends ActionHandler {
 	}
 
 
+	// intermittent cleanup
+	@Override
+	public void onCleanup() {
+		// remove offline from cache
+
+	}
+
+
 	// perform action
 	@Override
 	@EventHandler

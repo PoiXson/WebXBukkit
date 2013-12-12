@@ -23,6 +23,10 @@ public class permsHandler extends ActionHandler {
 	@Override
 	public void doUpdate() {
 	}
+	// intermittent cleanup
+	@Override
+	public void onCleanup() {
+	}
 
 
 	// perform action

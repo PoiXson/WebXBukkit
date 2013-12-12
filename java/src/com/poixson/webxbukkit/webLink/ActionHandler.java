@@ -27,6 +27,8 @@ public abstract class ActionHandler implements Listener {
 	public abstract void doUpdate();
 	// inbound updates
 	public abstract void onAction(ActionEvent event);
+	// intermittent cleanup
+	public abstract void onCleanup();
 
 
 	// enable handler
