@@ -71,6 +71,7 @@ public class economyHandler extends ActionHandler {
 			db.setDecimal(1, money);
 			db.setString (2, playerName);
 			db.exec();
+			// no record exists
 			if(db.getAffectedRows() == 0) {
 				// insert new row
 				db.prepare("INSERT INTO `pxn_Players` (`name`, `money`) VALUES (?, ?)");
@@ -78,7 +79,7 @@ public class economyHandler extends ActionHandler {
 				db.setDecimal(2, money);
 				db.exec();
 				if(db.getAffectedRows() == 0)
-					System.out.println("Failed to create new player account");
+					log().severe("Failed to create new player account");
 			}
 			// save cached value
 			cache.put(playerName, money);
